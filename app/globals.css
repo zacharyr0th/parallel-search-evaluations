@@ -1,0 +1,733 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@custom-variant dark (&:is(.dark *));
+
+/* The four Base UI state variants this app uses, copied from shadcn/tailwind.css so the
+   6.5 MB shadcn CLI stays out of the dependency tree for four selectors. */
+@custom-variant data-open {
+  &:where([data-state="open"]),
+  &:where([data-open]:not([data-open="false"])) {
+    @slot;
+  }
+}
+@custom-variant data-closed {
+  &:where([data-state="closed"]),
+  &:where([data-closed]:not([data-closed="false"])) {
+    @slot;
+  }
+}
+@custom-variant data-checked {
+  &:where([data-state="checked"]),
+  &:where([data-checked]:not([data-checked="false"])) {
+    @slot;
+  }
+}
+@custom-variant data-disabled {
+  &:where([data-disabled="true"]),
+  &:where([data-disabled]:not([data-disabled="false"])) {
+    @slot;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --font-heading: Arial, Helvetica, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  --background: #f8f8f7;
+  --foreground: #202020;
+  --card: #fff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #cc3d08;
+  --primary-foreground: #fff;
+  --ring: #e45a26;
+  --secondary: #fff0e9;
+  --secondary-foreground: #a63008;
+  --muted: #f3f3f1;
+  --muted-foreground: #636360;
+  --accent: #f1f1ee;
+  --accent-foreground: #202020;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e2e2de;
+  --input: #8f8f8a;
+  --radius: 0.375rem;
+}
+
+/* Parallel-inspired dark surfaces; light mode keeps its existing palette. */
+:root.dark {
+  color-scheme: dark;
+  --background: #0d0d0f;
+  --foreground: #e6e6e7;
+  --card: #111113;
+  --card-foreground: #e6e6e7;
+  --popover: #19191c;
+  --popover-foreground: #e6e6e7;
+  --primary: #ff702e;
+  --primary-foreground: #17100c;
+  --ring: #ff874d;
+  --muted: #232325;
+  --muted-foreground: #a3a3aa;
+  --secondary: #301b13;
+  --secondary-foreground: #ff9a68;
+  --accent: #252527;
+  --accent-foreground: #f2f2f3;
+  --border: #2c2c30;
+  --input: #66666f;
+  --destructive: #ff8585;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ---------------------------------------------------------------- elements */
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+p {
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+input,
+textarea {
+  background: var(--card);
+}
+:focus-visible {
+  outline-offset: 3px;
+}
+.dark img[src*="parallel-logo.svg"] {
+  filter: invert(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ shell */
+
+.app-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.app-shell > header {
+  background: var(--card);
+}
+.brand-wordmark {
+  font:
+    900 25px / 1 Arial,
+    sans-serif;
+  letter-spacing: -1.4px;
+}
+.brand-divider {
+  height: 20px;
+  width: 1px;
+  background: var(--border);
+  margin: 0 8px;
+}
+.brand-label {
+  font:
+    12px / 1.4 ui-monospace,
+    SFMono-Regular,
+    monospace;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+/* One centered footer row sits below both workspace containers. */
+.workspace-main {
+  padding-bottom: 60px;
+}
+.evaluations-page > main {
+  padding-bottom: 60px;
+}
+
+/* An ordered (Bayer) dither: one-pixel dots on a 4px grid, adding a dot position at each band so
+   density steps down from the top of the viewport. The SVG is only a mask, so the theme colors it. */
+.app-shell:has(.workspace-grid),
+.app-shell.evaluations-page,
+.sign-in-page {
+  isolation: isolate;
+}
+.app-shell:has(.workspace-grid)::before,
+.app-shell.evaluations-page::before,
+.sign-in-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='a' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect width='1' height='1'/%3E%3C/pattern%3E%3Cpattern id='b' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect x='2' y='2' width='1' height='1'/%3E%3C/pattern%3E%3Cpattern id='c' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect x='2' width='1' height='1'/%3E%3C/pattern%3E%3Cpattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect y='2' width='1' height='1'/%3E%3C/pattern%3E%3Cpattern id='e' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect x='1' y='1' width='1' height='1'/%3E%3C/pattern%3E%3Cpattern id='f' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Crect x='3' y='3' width='1' height='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23a)'/%3E%3Crect width='100%25' height='60%25' fill='url(%23b)'/%3E%3Crect width='100%25' height='34%25' fill='url(%23c)'/%3E%3Crect width='100%25' height='18%25' fill='url(%23d)'/%3E%3Crect width='100%25' height='9%25' fill='url(%23e)'/%3E%3Crect width='100%25' height='4%25' fill='url(%23f)'/%3E%3C/svg%3E")
+    0 0 / 100% 100% no-repeat;
+}
+
+.app-shell.evaluations-page::before {
+  opacity: 0.35;
+}
+
+/* Shared inputs and independent configurations form one workspace. */
+.workspace-grid {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+.workspace-grid > [data-slot="card"] {
+  box-shadow: none;
+  border-radius: 6px;
+}
+.workspace-grid .search-sidebar,
+.workspace-grid .review-results {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.workspace-grid .review-results {
+  border-left: 1px solid var(--border);
+}
+
+/* --------------------------------------------------------------- sidebar */
+
+.search-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+.search-settings-scroll {
+  position: relative;
+  overscroll-behavior: contain;
+  padding-inline: 24px;
+}
+.search-sidebar textarea {
+  resize: vertical;
+}
+.search-sidebar > div:first-child,
+.review-results > div:first-child {
+  min-height: 52px;
+  padding-block: 12px;
+}
+
+.search-group {
+  border-top: 1px solid var(--border);
+}
+.search-group > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 16px;
+  cursor: pointer;
+  list-style: none;
+}
+.search-group > summary::-webkit-details-marker {
+  display: none;
+}
+.search-group[open] > summary > svg {
+  transform: rotate(180deg);
+}
+.search-sidebar .search-group > summary {
+  padding-block: 18px;
+}
+
+.search-sidebar .setup-fields {
+  padding-block: 20px;
+}
+.search-sidebar .setup-fields > :not(:last-child) {
+  margin-bottom: 24px;
+}
+.search-sidebar .setup-fields > * + *,
+.search-sidebar .setup-fields .space-y-3 > * + * {
+  margin-top: 8px;
+}
+.search-sidebar .setup-fields .space-y-2 > * + * {
+  margin-top: 5px;
+}
+.search-sidebar .setup-fields [class*="space-y-"] > :not(:last-child) {
+  margin-block-end: 10px;
+}
+.search-sidebar .setup-fields [class*="space-y-"] > * {
+  margin-block-start: 0;
+}
+.search-sidebar .setup-fields p {
+  font-size: 0.75rem;
+  line-height: 20px;
+}
+.search-sidebar .setup-fields textarea {
+  min-height: 44px;
+  height: 44px;
+}
+.search-sidebar .setup-fields .query-fields > :not(:last-child) {
+  margin-block-end: 24px;
+}
+.search-sidebar .setup-fields #criteria {
+  min-height: 80px;
+  height: auto;
+  max-height: 240px;
+  field-sizing: content;
+}
+.search-sidebar .setup-fields textarea[id^="query"] {
+  min-height: 64px;
+  height: auto;
+  max-height: 180px;
+  field-sizing: content;
+  overflow-wrap: anywhere;
+}
+.search-sidebar .objective-input {
+  min-height: 64px;
+  max-height: 180px;
+  field-sizing: content;
+  resize: vertical;
+}
+.search-sidebar .query-fields > div:empty {
+  display: none;
+}
+
+.configuration-panel {
+  padding: 16px;
+}
+.configuration-panel > legend {
+  padding-inline: 6px;
+}
+.configuration-panel .search-group > summary {
+  padding-block: 10px;
+}
+
+/* --------------------------------------------------------------- results */
+
+.results-scroll {
+  overscroll-behavior: contain;
+  scrollbar-gutter: auto;
+  background: var(--card);
+}
+.results-scroll > .grid {
+  align-items: start;
+}
+.results-scroll:has(.result-lanes) {
+  padding: 0;
+}
+.result-lanes {
+  align-items: stretch;
+}
+
+.review-context {
+  max-height: 28dvh;
+  padding: 24px 28px;
+}
+/* Review details holds the rank-movement list, which does not fit the collapsed cap. */
+.review-context:has(> details[open]) {
+  max-height: 46dvh;
+}
+.review-context > :not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.results-toolbar [data-slot="select-trigger"],
+.results-toolbar button:not([role="radio"]) {
+  height: 32px;
+}
+.results-toolbar [role="radiogroup"] {
+  height: 32px;
+  padding: 3px;
+  align-items: center;
+}
+.results-toolbar [role="radio"] {
+  height: 24px;
+}
+.workspace-grid:has(.results-toolbar) .search-sidebar > div:first-child,
+.review-results > .results-toolbar {
+  min-height: 60px;
+  padding-block: 12px;
+}
+
+.mode-summary {
+  border-radius: 4px;
+  background: var(--muted);
+}
+.mode-summary h3 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--primary);
+}
+.review-results .mode-summary {
+  padding: 0 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--card);
+}
+.review-results .mode-summary > div:first-child {
+  padding-right: 32px;
+}
+.review-results .mode-summary > .absolute {
+  top: 0;
+  right: 0;
+}
+.review-results .result-lane > .mode-summary {
+  top: 0;
+  padding: 14px 24px;
+}
+.review-results .result-lane > .mode-summary > .absolute {
+  top: 10px;
+  right: 20px;
+}
+
+/* Defer offscreen result layout while preserving the cards and unsaved notes. */
+.result-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
+}
+.result-card a {
+  color: var(--foreground);
+  text-underline-offset: 3px;
+}
+.result-card > p {
+  margin-top: 10px;
+  line-height: 1.6;
+}
+.result-card > [aria-label^="Excerpt"] {
+  margin-top: 10px;
+  line-height: 1.65;
+}
+.result-card .rating-controls {
+  margin-top: 12px;
+  gap: 6px;
+}
+/* Digit buttons on a scale read as one control, not five separate ones. */
+.result-card .rating-controls > button[aria-pressed] {
+  min-width: 34px;
+  padding-inline: 8px;
+}
+.rating-controls button {
+  min-height: 32px;
+  border-radius: 4px;
+}
+.result-card .rating-controls button[aria-pressed] {
+  background: var(--card);
+  border-color: var(--input);
+  color: var(--foreground);
+}
+.result-card .rating-controls button[aria-pressed]:hover {
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--border));
+}
+.result-card .rating-controls button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 14%, var(--card));
+  border-color: var(--primary);
+  color: var(--secondary-foreground);
+}
+
+.result-lane > .result-card,
+.result-lane > details {
+  padding: 16px 24px;
+}
+.review-results .mode-summary > details {
+  margin-top: 24px;
+  padding-top: 8px;
+  border-top: 0;
+}
+.review-results .result-card > details {
+  margin-top: 10px;
+  padding-top: 0;
+  border-top: 0;
+}
+.review-results .result-card > details + details {
+  margin-top: 4px;
+}
+
+/* Keep saved-result disclosures consistent without replacing native keyboard behavior. */
+.review-results details:not(.search-group) > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 32px;
+  list-style: none;
+  cursor: pointer;
+}
+.review-results details:not(.search-group) > summary::-webkit-details-marker {
+  display: none;
+}
+.review-results details:not(.search-group) > summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  margin-right: 3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.review-results details[open]:not(.search-group) > summary::after {
+  transform: rotate(225deg);
+}
+
+/* --------------------------------------------------- setup (no results yet) */
+
+.setup-layout .review-results > .results-scroll {
+  padding: 0;
+}
+.setup-layout .configuration-panel {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.setup-layout .configuration-heading {
+  display: flex;
+  align-items: center;
+  height: 52px;
+  margin: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+.setup-layout .configuration-panel > div {
+  margin: 0;
+  padding: 20px;
+}
+.setup-layout .configuration-empty {
+  margin: 0 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  color: var(--muted-foreground);
+}
+
+/* --------------------------------------------------------------- scrollbars */
+
+/* Reveal scroll thumbs during scrolling or keyboard focus without changing layout. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+[data-scrolling],
+:focus-visible {
+  scrollbar-color: var(--border) transparent;
+}
+[data-scrolling]::-webkit-scrollbar-thumb,
+:focus-visible::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+@media (forced-colors: active) {
+  * {
+    scrollbar-color: auto;
+  }
+}
+
+/* -------------------------------------------------------------- breakpoints */
+
+@media (min-width: 1024px) {
+  .configuration-lane + .configuration-lane {
+    border-left: 1px solid var(--border);
+  }
+  .result-lane + .result-lane {
+    border-left: 1px solid var(--border);
+  }
+}
+@media (max-width: 1023px) {
+  .configuration-lane + .configuration-lane {
+    border-top: 1px solid var(--border);
+  }
+  .result-lane + .result-lane {
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 1199px) {
+  .app-shell {
+    height: auto;
+    overflow: visible;
+  }
+  .workspace-main {
+    overflow: visible;
+  }
+}
+
+@media (min-width: 801px) {
+  .app-shell {
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .workspace-main {
+    overflow: hidden;
+  }
+  .workspace-grid {
+    grid-template-columns: clamp(320px, 26vw, 380px) minmax(0, 1fr);
+  }
+  .workspace-grid:has(.experiment-toolbar) {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .workspace-grid:has(.results-toolbar) .search-sidebar > div:first-child {
+    height: var(--results-header-height, 60px);
+    min-height: 0;
+  }
+  .search-sidebar {
+    align-self: stretch;
+    min-height: 0;
+    max-height: 100%;
+  }
+}
+@media (min-width: 801px) and (min-height: 700px) {
+  .mode-summary {
+    position: sticky;
+    top: -20px;
+    z-index: 1;
+  }
+}
+@media (min-width: 801px) and (max-height: 820px) {
+  .workspace-main {
+    padding-top: 16px;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 800px) {
+  .app-shell > header > div {
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-inline: 16px;
+    padding-block: 12px;
+  }
+  .app-shell > header [data-slot="badge"] {
+    display: none;
+  }
+  .brand-divider {
+    margin: 0 2px;
+  }
+  .workspace-main {
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 20px;
+  }
+  .workspace-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .workspace-grid .review-results {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .review-results {
+    height: 85dvh;
+    min-height: 540px;
+  }
+  .search-sidebar {
+    max-height: 75dvh;
+    min-height: 420px;
+  }
+  .search-sidebar .search-settings-scroll {
+    padding-inline: 20px;
+  }
+  .rating-controls button {
+    min-height: 44px;
+  }
+  .result-lane > .result-card,
+  .result-lane > details,
+  .review-results .result-lane > .mode-summary,
+  .review-context {
+    padding: 20px;
+  }
+}
+
+/* Short desktop viewports (a 1280x800 laptop, say). These override the sidebar spacing set
+   above, so they have to stay last: an equivalent block higher in the file was silently
+   overridden by every later rule, and the default setup overflowed its pane by 48px. */
+@media (min-width: 801px) and (max-height: 850px) {
+  .search-sidebar > div:first-child {
+    padding-block: 10px;
+  }
+  .search-sidebar .setup-fields {
+    padding-block: 10px;
+  }
+  .search-sidebar .setup-fields > :not(:last-child) {
+    margin-bottom: 14px;
+  }
+  .search-sidebar .setup-fields .query-fields > :not(:last-child) {
+    margin-block-end: 14px;
+  }
+  .search-sidebar .setup-fields #criteria {
+    min-height: 72px;
+  }
+  .search-sidebar .setup-fields textarea[id^="query"] {
+    min-height: 56px;
+  }
+  .search-sidebar .search-group > summary {
+    padding-block: 8px;
+  }
+}

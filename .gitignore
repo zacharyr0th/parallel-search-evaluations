@@ -1,0 +1,32 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+
+# vercel
+.vercel*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# misc
+.DS_Store
+*.pem
+
+# agent and editor tooling, not part of the deliverable
+/.claude/
+/AGENTS.md
+/CLAUDE.md
+
+# local data, not source
+backups/
+
+# generated lint report
+trellis-todo.json

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.6/schema.json",
+  // Shared Raintree policy: complexity budgets, noExplicitAny and noParameterAssign as errors,
+  // and GritQL checks for TLS footguns. The overrides below are this project's own.
+  "extends": ["@raintree-technology/trellis/biome"],
+  // .gitignore already excludes .next, .vercel and next-env.d.ts.
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  // public/ holds static assets, not source.
+  "files": { "includes": ["**", "!public"] },
+  // Formatted with Biome so line breaks are a tool's decision, not a hand-made one.
+  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "linter": {
+    // Biome infers these from package.json. Naming them keeps the Next.js and React rules that
+    // replaced eslint-config-next from disappearing if that inference ever changes. `types`
+    // adds the type-aware rules, which need no extra setup here.
+    "domains": {
+      "next": "recommended",
+      "react": "recommended",
+      "types": "recommended",
+      "test": "recommended",
+      "playwright": "recommended",
+      "project": "recommended"
+    },
+    "rules": {
+      "preset": "recommended",
+      "style": {
+        // `!` is used deliberately throughout, mostly after a checked invariant.
+        "noNonNullAssertion": "off",
+        "useTemplate": "off",
+        // globals.css settles overrides by source order on purpose.
+        "noDescendingSpecificity": "off"
+      },
+      // The only `!important` sits in a prefers-reduced-motion block, where it belongs.
+      "complexity": { "noImportantStyles": "off" },
+      "correctness": {
+        // eslint-config-next reported react-hooks/exhaustive-deps at this level too: the two
+        // mount-only effects here would re-run every render if their deps were "completed".
+        "useExhaustiveDependencies": "warn"
+      },
+      "a11y": {
+        // Result cards and scroll panes are focusable on purpose, so a keyboard can reach and
+        // grade them; that is the WCAG-correct shape, not the violation this rule assumes.
+        "noNoninteractiveTabindex": "off",
+        // Cannot see a control through a component wrapper such as <Input>.
+        "noLabelWithoutControl": "off",
+        // Prefers a native element over the equivalent ARIA role. <nav> is used where it is a
+        // drop-in; elsewhere role="group"/"region" is valid ARIA, and <fieldset>/<section>
+        // would change layout or add landmarks without helping a screen reader.
+        "useSemanticElements": "off"
+      }
+    }
+  },
+  // Two overrides, both because the budget measures the wrong thing for that artifact —
+  // not because the code under it is exempt. Source files keep every budget.
+  "overrides": [
+    {
+      // globals.css is one cascade, not a module graph. Splitting it by line count would
+      // scatter a single ordered stylesheet across files and break override order.
+      "includes": ["app/globals.css"],
+      "linter": { "rules": { "style": { "noExcessiveLinesPerFile": "off" } } }
+    },
+    {
+      // A test file is one suite sharing one set of fixtures. Splitting it by line count
+      // separates cases from the fixtures they assert against.
+      "includes": ["tests/**"],
+      "linter": {
+        "rules": {
+          "style": { "noExcessiveLinesPerFile": "off" },
+          "complexity": {
+            "noExcessiveLinesPerFunction": "off",
+            "noExcessiveCognitiveComplexity": "off"
+          }
+        }
+      }
+    }
+  ]
+}

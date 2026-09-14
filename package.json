@@ -1,0 +1,40 @@
+{
+  "name": "parallel-search-evaluations",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "lint": "biome lint",
+    "lint:fix": "biome lint --write",
+    "test": "node --test tests/backend.mjs tests/routes.mjs",
+    "test:browser": "node --test tests/workspace.mjs",
+    "test:database": "node --test tests/grading.mjs",
+    "test:built": "node --test tests/built.mjs",
+    "lint:todo": "trellis todo --output trellis-todo.json"
+  },
+  "dependencies": {
+    "@base-ui/react": "^1.8.0",
+    "@neondatabase/auth": "^0.5.0-beta",
+    "class-variance-authority": "^0.7.1",
+    "cn": "^0.2.6",
+    "lucide-react": "^1.45.0",
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "tw-animate-css": "^1.4.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.6",
+    "@raintree-technology/trellis": "^0.3.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "pg": "^8.23.0",
+    "playwright": "^1.63.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,244 @@
+{
+  "properties": {
+    "objective": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Objective",
+      "description": "Natural-language description of the underlying question or goal driving the search. Used together with search_queries to focus results on the most relevant content. Should be self-contained with enough context to understand the intent of the search."
+    },
+    "search_queries": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "title": "Search Queries",
+      "description": "Concise keyword search queries, 3-6 words each. At least one query is required, provide 2-3 for best results. Used together with objective to focus results on the most relevant content."
+    },
+    "mode": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": ["turbo", "fast", "basic", "advanced"]
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Mode",
+      "description": "Search mode preset: supported values are `turbo`, `fast`, `basic`, and `advanced`. Turbo mode is optimized for the fastest responses. Use Fast mode for high quality search within a 1-second latency budget. Basic mode offers low latency and works best with 2-3 high-quality search_queries. Advanced mode provides higher quality with more advanced retrieval and compression. Defaults to `advanced` when omitted."
+    },
+    "max_chars_total": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Max Chars Total",
+      "description": "Upper bound on total characters across excerpts from all results."
+    },
+    "session_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 1000
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Session Id",
+      "description": "Session identifier to track calls across separate search and extract calls, to be used as part of a larger task. Specifying it may give better contextual results for subsequent API calls."
+    },
+    "client_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Client Model",
+      "description": "The model generating this request and consuming the results. Enables optimizations and tailors default settings for the model's capabilities.",
+      "examples": ["claude-opus-4-7", "gpt-5.4", "gemini-3.1-pro"]
+    },
+    "advanced_settings": {
+      "anyOf": [
+        {
+          "properties": {
+            "source_policy": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "include_domains": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array",
+                      "title": "Include Domains",
+                      "description": "List of domains or domain/path prefixes to restrict results to. If specified, only matching sources will be included and exclude_domains will be ignored. Accepts plain domains (e.g., wikipedia.org), domain/path prefixes (e.g., docs.python.org/3), or bare domain extensions (e.g., .gov, .edu, .co.uk). The combined number of entries in include_domains and exclude_domains cannot exceed 200.",
+                      "examples": [["wikipedia.org", "docs.python.org/3", ".edu"]]
+                    },
+                    "exclude_domains": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array",
+                      "title": "Exclude Domains",
+                      "description": "List of domains or domain/path prefixes to exclude from results. Applied only when include_domains is empty. If specified, matching sources will be excluded. Accepts plain domains (e.g., reddit.com), domain/path prefixes (e.g., youtube.com/shorts), or bare domain extensions (e.g., .gov, .edu, .co.uk). The combined number of entries in include_domains and exclude_domains cannot exceed 200.",
+                      "examples": [["reddit.com", "youtube.com/shorts", ".ai"]]
+                    },
+                    "after_date": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "title": "After Date",
+                      "description": "Optional start date for filtering search results. Results will be limited to content published on or after this date. Provided as an RFC 3339 date string (YYYY-MM-DD).",
+                      "examples": ["2024-01-01"]
+                    }
+                  },
+                  "type": "object",
+                  "title": "SourcePolicy",
+                  "description": "Source policy for web search results.\n\nPlain domains match that domain and its subdomains. Domain/path entries use\ncase-sensitive path matching at segment boundaries; trailing slashes are ignored,\ndot segments are normalized, and other percent-encoded path spelling is preserved.\nEntries omit schemes, ports, query strings, and fragments. When include_domains is\nnon-empty, it defines the complete allowlist and exclude_domains is ignored."
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Included and excluded domain, path, and date filters for search results. Domain path prefixes are not supported in Turbo mode."
+            },
+            "fetch_policy": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "max_age_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "title": "Max Age Seconds",
+                      "description": "Maximum age of cached content in seconds to trigger a live fetch. Minimum value 600 seconds (10 minutes).",
+                      "examples": [86400]
+                    },
+                    "timeout_seconds": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "title": "Timeout Seconds",
+                      "description": "Timeout in seconds for fetching live content if unavailable in cache.",
+                      "examples": [60.0]
+                    },
+                    "disable_cache_fallback": {
+                      "type": "boolean",
+                      "title": "Disable Cache Fallback",
+                      "description": "If false, fallback to cached content older than max-age if live fetch fails or times out. If true, returns an error instead.",
+                      "default": false
+                    }
+                  },
+                  "type": "object",
+                  "title": "FetchPolicy",
+                  "description": "Policy for live fetching web results."
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Fetch policy: determines when to return cached content from the index (faster) vs fetching live content (fresher). Default is to disable live fetch and return cached content from the index. Note: enabling live fetch significantly increases search latency because it requires fetching content from source websites."
+            },
+            "excerpt_settings": {
+              "anyOf": [
+                {
+                  "properties": {
+                    "max_chars_per_result": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "title": "Max Chars Per Result",
+                      "description": "Optional upper bound on the total number of characters to include per url. Excerpts may contain fewer characters than this limit to maximize relevance and token efficiency."
+                    }
+                  },
+                  "additionalProperties": false,
+                  "type": "object",
+                  "title": "V1ExcerptSettings",
+                  "description": "Optional settings for returning relevant excerpts."
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Controls excerpt sizes. Provide excerpt settings for fine-grained control, or omit to use defaults."
+            },
+            "location": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Location",
+              "description": "ISO 3166-1 alpha-2 country code for geo-targeted search results.",
+              "examples": ["us", "gb", "de", "jp"]
+            },
+            "max_results": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Max Results",
+              "description": "Upper bound on the number of results to return. Defaults to 10 if not provided."
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "title": "AdvancedSearchSettings",
+          "description": "Advanced search configuration.\n\nThese settings may impact result quality and latency unless used carefully.\nSee https://docs.parallel.ai/search/advanced-search-settings for more info."
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Advanced configuration for source policy, fetch policy, and excerpt settings. May impact result quality and latency unless used carefully. When omitted, excerpts are enabled by default."
+    }
+  },
+  "additionalProperties": false,
+  "type": "object",
+  "required": ["search_queries"],
+  "title": "V1SearchRequest",
+  "description": "Search request.",
+  "$comment": "Parallel public-openapi.json, retrieved 2026-09-11. Additional documented limits are checked in search-request.ts."
+}

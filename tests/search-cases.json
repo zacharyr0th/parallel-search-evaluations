@@ -1,0 +1,67 @@
+{
+  "request": {
+    "search_queries": ["Python search documentation", "Parallel authentication"],
+    "objective": "Find official instructions for Python developers.",
+    "max_chars_total": 16000,
+    "session_id": "session_test",
+    "client_model": "gpt-5.4",
+    "advanced_settings": {
+      "max_results": 12,
+      "location": "gb",
+      "source_policy": {
+        "include_domains": ["docs.parallel.ai/search", ".gov"],
+        "exclude_domains": ["reddit.com"],
+        "after_date": "2026-01-01"
+      },
+      "excerpt_settings": { "max_chars_per_result": 2000 },
+      "fetch_policy": {
+        "max_age_seconds": 86400,
+        "timeout_seconds": 10.5,
+        "disable_cache_fallback": true
+      }
+    }
+  },
+  "invalid": [
+    { "search_queries": [] },
+    { "search_queries": [" "] },
+    { "search_queries": ["a", "b", "c", "d", "e", "f"] },
+    { "search_queries": [42] },
+    { "search_queries": ["x"], "objective": true },
+    { "search_queries": ["x"], "mode": "unknown" },
+    { "search_queries": ["x"], "extra": true },
+    { "search_queries": ["x"], "advanced_settings": [] },
+    { "search_queries": ["x"], "advanced_settings": { "max_results": true } },
+    { "search_queries": ["x"], "max_chars_total": 0 },
+    { "search_queries": ["x"], "advanced_settings": { "max_results": 1.5 } },
+    { "search_queries": ["x"], "advanced_settings": { "location": "uk" } },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "source_policy": { "include_domains": null } }
+    },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "source_policy": { "exclude_domains": ["https://example.com"] } }
+    },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "source_policy": { "exclude_domains": ["*.com"] } }
+    },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "source_policy": { "after_date": "2026-02-30" } }
+    },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "fetch_policy": { "max_age_seconds": 599 } }
+    },
+    { "search_queries": ["x"], "advanced_settings": { "fetch_policy": { "timeout_seconds": 0 } } },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "fetch_policy": { "disable_cache_fallback": null } }
+    },
+    {
+      "search_queries": ["x"],
+      "advanced_settings": { "excerpt_settings": { "max_chars_per_result": -1 } }
+    }
+  ]
+}
